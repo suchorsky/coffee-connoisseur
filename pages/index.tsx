@@ -5,6 +5,8 @@ import Image from 'next/image'
 import Banner from '@/components/banner/Banner'
 import Card from '@/components/card/Card'
 
+import coffeStores from '../data/coffee-stores.json'
+
 const hanldeOnButtonClick = () => {
   console.log('click');
 }
@@ -30,24 +32,19 @@ export default function Home() {
           />
         </div>
         <div className={styles.cardLayout}>
-          <Card
-            imgUrl="/static/hero-image.png"
-            href="/coffee-store/coffee-test-card"
-            name="coffee test card"
-            className={styles.card}
-          />
-          <Card
-            imgUrl="/static/hero-image.png"
-            href="/coffee-store/coffee-test-card"
-            name="coffee test card"
-            className={styles.card}
-          />
-          <Card
-            imgUrl="/static/hero-image.png"
-            href="/coffee-store/coffee-test-card"
-            name="coffee test card"
-            className={styles.card}
-          />
+          {
+            coffeStores.map((coffeStore) => {
+              return (
+                <Card
+                  imgUrl={coffeStore.imgUrl}
+                  href={`/coffee-store/${coffeStore.id}`}
+                  name={coffeStore.name}
+                  className={styles.card}
+                  key={coffeStore.id}
+                />
+              )
+            })
+          }
         </div>
       </main>
     </div>
