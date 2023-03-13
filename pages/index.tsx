@@ -7,11 +7,21 @@ import Card from '@/components/card/Card'
 
 import coffeStores from '../data/coffee-stores.json'
 
+//SSR
+export async function getStaticProps(context: any) {
+  return {
+    props: {
+      coffeStores
+    },
+  }
+}
+
 const hanldeOnButtonClick = () => {
   console.log('click');
 }
 
-export default function Home() {
+//to change props as global type
+export default function Home({ coffeStores }: any) {
   return (
     <div className={styles.container}>
       <Head>
@@ -33,14 +43,14 @@ export default function Home() {
         </div>
         <div className={styles.cardLayout}>
           {
-            coffeStores.map((coffeStore) => {
+            coffeStores.map((coffeStore: any) => {
               return (
                 <Card
                   imgUrl={coffeStore.imgUrl}
                   href={`/coffee-store/${coffeStore.id}`}
                   name={coffeStore.name}
-                  className={styles.card}
                   key={coffeStore.id}
+                  className={styles.card}
                 />
               )
             })

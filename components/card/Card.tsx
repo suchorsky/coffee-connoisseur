@@ -8,7 +8,7 @@ interface CardProps {
   href: string;
   name: string;
   imgUrl: string;
-  className: string;
+  className?: string;
 }
 
 const Card = (props: CardProps) => {
