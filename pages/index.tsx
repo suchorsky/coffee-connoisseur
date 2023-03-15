@@ -1,17 +1,18 @@
 import Head from 'next/head'
-import styles from '@/styles/Home.module.css'
 import Image from 'next/image'
+
+import styles from '@/styles/Home.module.css'
 
 import Banner from '@/components/banner/Banner'
 import Card from '@/components/card/Card'
 
-import coffeStores from '../data/coffee-stores.json'
+import coffeStoresData from '../data/coffee-stores.json'
 
 //SSR
 export async function getStaticProps(context: any) {
   return {
     props: {
-      coffeStores
+      coffeStores: coffeStoresData,
     },
   }
 }
@@ -41,22 +42,25 @@ export default function Home({ coffeStores }: any) {
             alt='coffe-banner'
           />
         </div>
-        <div className={styles.cardLayout}>
-          {
-            coffeStores.map((coffeStore: any) => {
-              return (
-                <Card
-                  imgUrl={coffeStore.imgUrl}
-                  href={`/coffee-store/${coffeStore.id}`}
-                  name={coffeStore.name}
-                  key={coffeStore.id}
-                  className={styles.card}
-                />
-              )
-            })
-          }
-        </div>
+        {coffeStores.length > 0 && (
+          <>
+            <h2 className={styles.heading2}>Toronto Stores</h2>
+            <div className={styles.cardLayout}>
+              {
+                coffeStores.map((coffeStore: any) => {
+                  return (
+                    <Card
+                      imgUrl={coffeStore.imgUrl}
+                      href={`/coffee-store/${coffeStore.id}`}
+                      name={coffeStore.name}
+                      key={coffeStore.id}
+                    />
+                  );
+                })}
+            </div>
+          </>
+        )}
       </main>
     </div>
-  )
+  );
 }
