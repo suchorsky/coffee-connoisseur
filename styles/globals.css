@@ -50,7 +50,7 @@ button:focus {
 
 :root {
   --text-green: rgba(58, 79, 65, 1);
-  --text-purple-dark: rgba(28, 2, 33, 1);
+  --text-purple-dark: rgb(28, 2, 33);
   --text-cafe: rgba(166, 123, 91, 1);
   --text-white-100: rgba(243, 243, 244, 1);
 }
