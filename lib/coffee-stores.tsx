@@ -24,7 +24,6 @@ export const fetchCoffeStores = async () => {
     const response = await fetch(getUrlForCoffee("53.120354%2C18.004737", "coffee", "6"), 
     requestInit);
     const data:CoffeStoresResponse = await response.json()
-    console.log(data.results)
 
     return data.results;
     // .catch(err => console.error(err));

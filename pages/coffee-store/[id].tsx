@@ -4,30 +4,32 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import cls from "classnames";
 
-import coffeeStoresData from '../../data/coffee-stores.json'
-
 import styles from "../../styles/coffee-store.module.css"
+import { fetchCoffeStores } from "@/lib/coffee-stores";
 
 //change any!
-export function getStaticProps(staticProps: { params: any; }) {
+export async function getStaticProps(staticProps: { params: any; }) {
   const params = staticProps.params
+  const coffeeStores = await fetchCoffeStores();
   return {
     props: {
-      coffeeStore: coffeeStoresData.find(coffeeStore => {
-        return coffeeStore.id.toString() === params.id;
+      coffeeStore: coffeeStores.find(coffeeStore => {
+        return coffeeStore.fsq_id.toString() === params.id;
       })
     }
   }
 }
 
-export function getStaticPaths() {
-  const paths = coffeeStoresData.map(coffeeStore => {
+export async function getStaticPaths() {
+  const coffeeStores = await fetchCoffeStores();
+  const paths = coffeeStores.map(coffeeStore => {
     return {
       params: {
-        id: coffeeStore.id.toString()
+        id: coffeeStore.fsq_id.toString()
       }
     }
   })
+  console.log("PATHS!", paths)
   return {
     paths,
     fallback: true,
@@ -41,7 +43,7 @@ const CoffeStore = (props: any) => {
     return <div>Loading...</div>
   }
 
-  const { address, name, neighbourhood, imgUrl } = props.coffeeStore;
+  const { location, name } = props.coffeeStore;
 
   const handleUpvoteButton = () => {
     console.log("handle upvote")
@@ -63,7 +65,7 @@ const CoffeStore = (props: any) => {
             <h1 className={styles.name}>{name}</h1>
           </div>
           <Image
-            src={imgUrl}
+            src={"https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80"}
             alt={name}
             width={600}
             height={360}
@@ -73,11 +75,11 @@ const CoffeStore = (props: any) => {
         <div className={cls("glass", styles.col2)}>
           <div className={styles.iconWrapper}>
             <Image src="/static/icons/places.svg" width="24" height="24" alt="icon" />
-            <p className={styles.text}>{address}</p>
+            <p className={styles.text}>{location.address}</p>
           </div>
           <div className={styles.iconWrapper}>
             <Image src="/static/icons/nearMe.svg" width="24" height="24" alt="icon" />
-            <p className={styles.text}>{neighbourhood}</p>
+            <p className={styles.text}>{location.locality}</p>
           </div>
           <div className={styles.iconWrapper}>
             <Image src="/static/icons/star.svg" width="24" height="24" alt="icon" />
