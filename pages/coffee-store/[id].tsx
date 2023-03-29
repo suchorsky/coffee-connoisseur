@@ -89,7 +89,7 @@ const CoffeStore = (props: any) => {
             className={styles.upvoteButton}
             onClick={handleUpvoteButton}
           >
-            Up vote
+            Up votee
           </button>
         </div>
       </div>
