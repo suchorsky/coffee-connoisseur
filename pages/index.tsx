@@ -7,6 +7,7 @@ import Banner from '@/components/banner/Banner'
 import Card from '@/components/card/Card'
 
 import { fetchCoffeStores } from '@/lib/coffee-stores'
+import useTrackLocation from '@/hooks/use-track-location'
 
 //SSR
 export async function getStaticProps(context: any) {
@@ -20,12 +21,18 @@ export async function getStaticProps(context: any) {
   }
 }
 
-const hanldeOnButtonClick = () => {
-  console.log('click');
-}
 
 //to change props as global type
 export default function Home({ coffeStores }: any) {
+  const { handleTrackLocation, latLong, locationErrorMsg, isFindingLocation } = useTrackLocation();
+
+  console.log({ latLong, locationErrorMsg });
+
+  const hanldeOnButtonClick = () => {
+    console.log('click');
+    handleTrackLocation();
+  }
+
   return (
     <div className={styles.container}>
       <Head>
@@ -34,9 +41,14 @@ export default function Home({ coffeStores }: any) {
       </Head>
       <main className={styles.main}>
         <Banner
-          buttonText="View stores nearby"
+          buttonText={isFindingLocation ? "Locating" : "View stores nearby"}
           handleOnClick={hanldeOnButtonClick}
         />
+        {
+          locationErrorMsg && (
+            <p>Something went wrong {locationErrorMsg}</p>
+          )
+        }
         <div className={styles.heroImage}>
           <Image
             src='/static/hero-image.png'
