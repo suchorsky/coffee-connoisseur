@@ -8,12 +8,12 @@ import Card from '@/components/card/Card';
 
 import { fetchCoffeStores } from '@/lib/coffee-stores';
 import useTrackLocation from '@/hooks/use-track-location';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 //SSR
 export async function getStaticProps(context: any) {
   const coffeStores = await fetchCoffeStores();
-
+  console.log('hi static props');
   return {
     props: {
       coffeStores,
@@ -22,9 +22,12 @@ export async function getStaticProps(context: any) {
 }
 
 //to change props as global type
-export default function Home({ coffeStores }: any) {
+export default function Home(props: any) {
   const { handleTrackLocation, latLong, locationErrorMsg, isFindingLocation } =
     useTrackLocation();
+
+  const [coffeeStores, setCoffeeStores] = useState<any>([]);
+  const [coffeeStoresError, setCoffeeStoresError] = useState<any>(null);
 
   console.log({ latLong, locationErrorMsg });
 
@@ -38,8 +41,9 @@ export default function Home({ coffeStores }: any) {
       if (latLong) {
         try {
           const fetchedCoffeStores: any = await fetchCoffeStores(latLong);
-        } catch (error) {
-          console.log(error);
+          setCoffeeStores(fetchedCoffeStores);
+        } catch (error: any) {
+          setCoffeeStoresError(error.message);
         }
       }
     }
@@ -57,7 +61,8 @@ export default function Home({ coffeStores }: any) {
           buttonText={isFindingLocation ? 'Locating' : 'View stores nearby'}
           handleOnClick={hanldeOnButtonClick}
         />
-        {locationErrorMsg && <p>Something went wrong {locationErrorMsg}</p>}
+        {locationErrorMsg && <p>Something went wrong: {locationErrorMsg}</p>}
+        {coffeeStoresError && <p>Something went wrong: {coffeeStoresError}</p>}
         <div className={styles.heroImage}>
           <Image
             src='/static/hero-image.png'
@@ -66,11 +71,31 @@ export default function Home({ coffeStores }: any) {
             alt='coffe-banner'
           />
         </div>
-        {coffeStores.length > 0 && (
+        {coffeeStores.length > 0 && (
+          <>
+            <h2 className={styles.heading2}>Stores Near me</h2>
+            <div className={styles.cardLayout}>
+              {coffeeStores.map((coffeStore: any) => {
+                return (
+                  <Card
+                    imgUrl={
+                      coffeStore.imgUrl ||
+                      'https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80'
+                    }
+                    href={`/coffee-store/${coffeStore.fsq_id}`}
+                    name={coffeStore.name}
+                    key={coffeStore.fsq_id}
+                  />
+                );
+              })}
+            </div>
+          </>
+        )}
+        {props.coffeStores.length > 0 && (
           <>
             <h2 className={styles.heading2}>Toronto Stores</h2>
             <div className={styles.cardLayout}>
-              {coffeStores.map((coffeStore: any) => {
+              {props.coffeStores.map((coffeStore: any) => {
                 return (
                   <Card
                     imgUrl={

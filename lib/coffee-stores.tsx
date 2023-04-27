@@ -11,7 +11,7 @@ export const fetchCoffeStores = async (
     method: 'GET',
     headers: {
       accept: 'application/json',
-      Authorization: process.env.API_KEY,
+      Authorization: process.env.NEXT_PUBLIC_API_KEY,
     },
   };
 
@@ -28,7 +28,7 @@ export const fetchCoffeStores = async (
     requestInit
   );
   const data: CoffeStoresResponse = await response.json();
-
+  console.log('data return: ', data.results);
   return data.results;
   // .catch(err => console.error(err));
 };
